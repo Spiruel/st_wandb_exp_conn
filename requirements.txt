@@ -1,3 +1,4 @@
 streamlit
 git+https://github.com/streamlit/files-connection
 numpy
+wandbfs
