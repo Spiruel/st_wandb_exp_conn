@@ -85,6 +85,6 @@ else:
         reqs_check = ['requirements.txt' in f for f in files]
         if any(reqs_check):
             with st.expander('run requirements:'):
-            st.code(conn.read(f'{entity}/{project}/{run_id}/requirements.txt'))
+                st.code(conn.read(f'{entity}/{project}/{run_id}/requirements.txt'))
 
 
