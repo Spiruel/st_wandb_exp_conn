@@ -11,7 +11,7 @@ This app is just a basic demo for now, but can be used to create custom interfac
 
 conn = st.experimental_connection('wandb', type=FilesConnection)
 
-entity = st.text_input('Wandb Entity', value='wandb')
+entity = st.text_input('Wandb Entity eg. `wandb`, `sciml-leeds`', value='wandb')
 
 col1, col2 = st.columns([0.7,0.3])
 a = col1.empty()
