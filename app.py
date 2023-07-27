@@ -18,9 +18,9 @@ class WandbConnector:
     def query(self, path):
         return self.cursor().read(path, input_format='text')
 
-@st.cache_data  
-def cached_query(connector, path):
-    return connector.query(path)
+@st.cache_data(ttl='1h')
+def cached_query(_connector, path):
+    return _connector.query(path)
     
 st.title('st.experimental_connection with Weights & Biases')
 st.info('''This Streamlit app demonstrates how to access and display data from Weights & Biases machine learning experiments using the new experimental_connection functionality. 
