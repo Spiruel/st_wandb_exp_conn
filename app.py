@@ -15,8 +15,19 @@ class WandbConnector:
             self._connect()
         return self._conn
 
-    def query(self, path):
-        return self.cursor().read(path, input_format='text')
+    def query(self, path, method='read', **kwargs):
+        conn = self.cursor()
+        
+        if method == 'ls':
+            return conn.fs.ls(path, **kwargs)
+          
+        elif method == 'open':
+            return conn.open(path, **kwargs)
+        
+        elif method == 'read':
+            return conn.read(path, **kwargs)
+        else:
+            raise ValueError(f"Invalid method: {method}")
 
 @st.cache_data(ttl='1h')
 def cached_query(_connector, path):
@@ -38,7 +49,8 @@ a = col1.empty()
 b = col2.empty()
 
 try:
-    projects = list(set(wandb.cursor().fs.ls(entity)))
+    projects =  wandb.query(entity, method='ls')
+    projects = list(set(projects))
 except Exception as e:
     st.error(f'Could not find projects under {entity}')
 else:    
@@ -56,8 +68,8 @@ else:
     except Exception as e:
         st.error(f'Could not find projects under {entity}')
     else:
-        
-        runs = wandb.cursor().fs.ls(f'{entity}/{project}')
+
+        runs = wandb.query(f'{entity}/{project}', method='ls')
         if len(runs) == 0:
             st.warning('No runs found')
         else:
@@ -72,8 +84,8 @@ else:
                 run_index = 0
                 
             run_id = b.selectbox('Select run', runs, index=run_index)
-        
-            files = wandb.cursor().fs.ls(f'{entity}/{project}/{run_id}')
+
+            files = wandb.query(f'{entity}/{project}/{run_id}', method='ls')
         
             graph_check = ['graph' in f for f in files]
             if any(graph_check):
@@ -87,7 +99,7 @@ else:
                 with st.spinner('loading images...'):
                     media_src = np.array(files)[media_check]
                     for m_s in media_src:
-                        images = wandb.cursor().fs.ls(m_s+'/images')
+                        images = wandb.query(m_s+'/images', method='ls')
                         st.markdown('#### images')
                         if len(images) == 0:
                             st.warning('no images')
@@ -98,7 +110,7 @@ else:
                         num_row = 7
                         rows = n//num_row
         
-                        images_conn = [wandb.cursor().open(img) for img in images]
+                        images_conn = [wandb.query(img, method='open') for img in images]
         
                         for row_idx in range(0, rows, 1):
                             st.image(images_conn[0+row_idx*num_row:0+row_idx*num_row+num_row], width=100)
