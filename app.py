@@ -91,7 +91,7 @@ else:
             if any(graph_check):
                 with st.spinner('loading...'):
                     st.markdown('#### graph')
-                    graph = wandb.query(f'{entity}/{project}/{run_id}/graph', method='read')
+                    graph = wandb.query(f'{entity}/{project}/{run_id}/graph', method='read', input_format='text')
                     st.graphviz_chart(graph, use_container_width=True)
                
             media_check = ['media' in f for f in files]
