@@ -8,7 +8,7 @@ class WandbConnector:
         self._conn = None
 
     def _connect(self):
-        self._conn = st.experimental_connection('wandb', type=FilesConnection)
+        self._conn = st.connection('wandb', type=FilesConnection)
 
     def cursor(self):
         if not self._conn:
@@ -33,8 +33,8 @@ class WandbConnector:
 def cached_query(_connector, path):
     return _connector.query(path)
     
-st.title('st.experimental_connection with Weights & Biases')
-st.info('''This Streamlit app demonstrates how to access and display data from Weights & Biases machine learning experiments using the new experimental_connection functionality. 
+st.title('st.connection with Weights & Biases')
+st.info('''This Streamlit app demonstrates how to access and display data from Weights & Biases machine learning experiments using the st.connection functionality. 
 
 The app establishes a connection to W&B cloud storage using the FilesConnection object from st_files_connection. This allows browsing W&B entities, projects, and files.
 
